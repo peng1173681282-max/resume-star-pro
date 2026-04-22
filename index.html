@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>简历星Pro · v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+:root{--bg:#0c0e14;--bg2:#13161f;--bg3:#1d2030;--panel:rgba(255,255,255,.04);--glass:rgba(255,255,255,.07);--border:rgba(255,255,255,.09);--accent:#7c6af7;--a2:#a78bfa;--a3:#c4b5fd;--glow:rgba(124,106,247,.28);--t1:#eef0f8;--t2:#8b8fa8;--t3:#4a4d5e;--danger:#f87171;--ok:#34d399;--warn:#fbbf24;--font:'Noto Sans SC',system-ui,sans-serif;--top:56px;--side:400px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);font-size:14px}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 45% at 10% 10%,rgba(124,106,247,.07) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 90% 90%,rgba(167,139,250,.05) 0%,transparent 60%);pointer-events:none;z-index:0}
+.app{display:flex;flex-direction:column;height:100vh;position:relative;z-index:1}
+.workspace{display:flex;flex:1;overflow:hidden}
+/* TOPBAR */
+.topbar{height:var(--top);background:rgba(12,14,20,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;padding:0 16px;flex-shrink:0;z-index:100}
+.logo{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--accent),var(--a2));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;box-shadow:0 0 14px var(--glow);flex-shrink:0}
+.brand-t{font-size:14px;font-weight:800;letter-spacing:-.5px}
+.brand-t em{color:var(--a2);font-style:normal}
+.vd{width:1px;height:20px;background:var(--border);flex-shrink:0;margin:0 2px}
+.spacer{flex:1}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font);transition:all .18s;white-space:nowrap}
+.gh{background:var(--panel);color:var(--t2);border:1px solid var(--border)}
+.gh:hover{background:var(--glass);color:var(--t1);border-color:rgba(124,106,247,.5)}
+.ba{background:linear-gradient(135deg,var(--accent),var(--a2));color:#fff;box-shadow:0 3px 12px var(--glow)}
+.ba:hover{transform:translateY(-1px);box-shadow:0 5px 18px var(--glow)}
+.bai{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;box-shadow:0 3px 12px rgba(245,158,11,.3)}
+.bai:hover{transform:translateY(-1px)}
+.tpl-trig{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:8px;border:1px solid var(--border);background:var(--panel);color:var(--t2);cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font);transition:all .18s}
+.tpl-trig:hover,.tpl-trig.on{border-color:var(--accent);color:var(--t1);background:rgba(124,106,247,.12)}
+.tpl-nm{color:var(--a3);font-weight:700;font-size:11px}
+/* SIDEBAR */
+.sidebar{width:var(--side);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+/* Compact chip nav */
+.snav{flex-shrink:0;border-bottom:1px solid var(--border);padding:5px 10px 6px}
+.snav-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.sch{display:inline-flex;align-items:center;gap:2px;padding:3px 8px;border-radius:20px;border:1px solid transparent;background:none;color:var(--t3);cursor:pointer;font-size:11px;font-weight:600;font-family:var(--font);transition:all .15s;user-select:none;white-space:nowrap}
+.sch:hover{background:var(--panel);color:var(--t2);border-color:rgba(255,255,255,.06)}
+.sch.act{background:rgba(124,106,247,.18);border-color:rgba(124,106,247,.38);color:var(--a2)}
+.sch.dk{opacity:.3}
+.sch.dov{border-color:var(--accent)!important;background:rgba(124,106,247,.2)!important}
+.sch-grip{font-size:10px;color:var(--t3);cursor:grab;opacity:0;margin-right:1px;transition:opacity .12s}
+.sch:hover .sch-grip{opacity:.7}
+.sch-del{margin-left:2px;opacity:0;font-size:12px;color:var(--t3);line-height:1;border:none;background:none;cursor:pointer;font-family:var(--font);padding:0 1px;transition:all .12s}
+.sch:hover .sch-del{opacity:1}
+.sch-del:hover{color:var(--danger)}
+.sadd{padding:3px 8px;border-radius:20px;border:1px dashed rgba(124,106,247,.35);background:none;color:var(--a3);cursor:pointer;font-size:11px;font-weight:600;font-family:var(--font);transition:all .15s}
+.sadd:hover{background:rgba(124,106,247,.1);border-color:var(--accent)}
+.ed-scroll{flex:1;overflow-y:auto;padding:14px}
+.ed-scroll::-webkit-scrollbar{width:3px}
+.ed-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.ed-foot{padding:7px 14px;border-top:1px solid var(--border);font-size:10px;color:var(--t3);background:var(--bg);flex-shrink:0}
+/* Editor atoms */
+.esec{display:flex;flex-direction:column;gap:11px}
+.esec-hd{display:flex;align-items:center;justify-content:space-between;padding-bottom:9px;border-bottom:1px solid var(--border)}
+.esec-ttl{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.bxs{padding:3px 9px;border-radius:6px;border:1px solid rgba(124,106,247,.4);background:rgba(124,106,247,.1);color:var(--a2);cursor:pointer;font-size:11px;font-weight:600;font-family:var(--font);transition:all .15s}
+.bxs:hover{background:rgba(124,106,247,.25)}
+.bxd{border-color:rgba(248,113,113,.4)!important;background:rgba(248,113,113,.08)!important;color:var(--danger)!important}
+.bxd:hover{background:rgba(248,113,113,.2)!important}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fld{display:flex;flex-direction:column;gap:4px}
+.flb{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px}
+.fi{padding:7px 10px;border:1px solid var(--border);border-radius:7px;font-size:13px;font-family:var(--font);color:var(--t1);background:rgba(255,255,255,.04);transition:all .18s;resize:vertical;width:100%;outline:none}
+.fi:focus{border-color:var(--accent);background:rgba(124,106,247,.07);box-shadow:0 0 0 3px rgba(124,106,247,.12)}
+.fi::placeholder{color:var(--t3)}
+select.fi{cursor:pointer}
+.tog{display:flex;align-items:center;gap:6px;cursor:pointer}
+.tog input{accent-color:var(--accent);width:14px;height:14px}
+.tog span{font-size:12px;color:var(--t2)}
+/* Sortable cards */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px;transition:all .18s;margin-bottom:7px}
+.card:hover{border-color:rgba(124,106,247,.28)}
+.card.dk2{opacity:.3;border-color:var(--accent)}
+.card.dov2{border-color:var(--accent);border-style:dashed;box-shadow:0 0 0 2px var(--glow)}
+.card-hd{display:flex;justify-content:space-between;align-items:center}
+.card-l{display:flex;align-items:center;gap:6px}
+.grip{color:var(--t3);font-size:13px;cursor:grab;padding:2px 3px;border-radius:3px;transition:color .12s}
+.grip:hover{color:var(--t2)}
+.cnum{width:18px;height:18px;border-radius:4px;background:linear-gradient(135deg,var(--accent),var(--a2));display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff}
+.clbl{font-size:11px;font-weight:600;color:var(--t2)}
+.bic{border:none;background:none;cursor:pointer;color:var(--t3);font-size:15px;padding:2px 5px;border-radius:4px;transition:all .12s;font-family:var(--font)}
+.bic:hover{background:rgba(248,113,113,.12);color:var(--danger)}
+.br{display:flex;align-items:center;gap:5px;margin-bottom:4px}
+.bdot{color:var(--a2);font-size:10px;flex-shrink:0}
+.bdd{border:none;background:none;color:var(--t3);cursor:pointer;font-size:16px;padding:0 3px;transition:color .12s;font-family:var(--font);flex-shrink:0}
+.bdd:hover{color:var(--danger)}
+.badb{width:100%;border:1px dashed rgba(124,106,247,.3);background:none;color:var(--a2);border-radius:6px;padding:4px;cursor:pointer;font-size:11px;font-weight:600;font-family:var(--font);transition:all .15s}
+.badb:hover{background:rgba(124,106,247,.1);border-color:var(--accent)}
+/* Stars — no progress bars */
+.stars{display:flex;gap:1px;margin-top:2px;align-items:center}
+.star{font-size:16px;cursor:pointer;user-select:none;line-height:1;transition:transform .1s;color:var(--warn)}
+.star.e{color:var(--t3)}
+.star:hover{transform:scale(1.15)}
+/* Avatar */
+.avwrap{display:flex;align-items:center;gap:12px;margin-bottom:2px}
+.avc{width:64px;height:64px;border-radius:50%;border:2px solid var(--border);overflow:hidden;flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;position:relative;transition:border-color .2s}
+.avc:hover{border-color:var(--accent)}
+.avc img{width:100%;height:100%;object-fit:cover}
+.avov{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s;font-size:16px}
+.avc:hover .avov{opacity:1}
+.avmeta{display:flex;flex-direction:column;gap:4px}
+.avhint{font-size:11px;color:var(--t3)}
+/* PREVIEW */
+.preview-area{flex:1;overflow:hidden;display:flex;flex-direction:column;background:#1a1c26}
+.pbar{display:flex;align-items:center;justify-content:space-between;padding:6px 16px;background:rgba(0,0,0,.3);border-bottom:1px solid var(--border);flex-shrink:0}
+.zrow{display:flex;align-items:center;gap:3px}
+.zbtn{border:none;background:var(--panel);color:var(--t2);padding:3px 7px;border-radius:5px;cursor:pointer;font-size:12px;font-family:var(--font)}
+.zbtn:hover{background:var(--glass);color:var(--t1)}
+.zval{font-size:11px;color:var(--t2);min-width:32px;text-align:center}
+.pscroll{flex:1;overflow:auto;padding:24px 16px;display:flex;justify-content:center;align-items:flex-start}
+.pscroll::-webkit-scrollbar{width:5px}
+.pscroll::-webkit-scrollbar-thumb{background:#252836;border-radius:3px}
+.pwrap{transform-origin:top center;transition:transform .2s}
+/* MANAGER PAGE */
+.manager{flex:1;overflow:auto;background:var(--bg);padding:32px 40px}
+.manager::-webkit-scrollbar{width:6px}
+.manager::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.mgr-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.mgr-title{font-size:22px;font-weight:900;letter-spacing:-.5px}
+.mgr-title em{color:var(--a2);font-style:normal}
+.mgr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.rc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s}
+.rc:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.4)}
+.rc-thumb{height:190px;overflow:hidden;background:#e8e8e8;position:relative;display:flex;align-items:flex-start;justify-content:center}
+.rc-info{padding:11px 13px;display:flex;align-items:center;justify-content:space-between}
+.rc-name{font-size:14px;font-weight:700}
+.rc-meta{font-size:11px;color:var(--t3);margin-top:1px}
+.rc-tpl{font-size:11px;color:var(--a2);font-weight:600}
+.rc-actions{display:flex;gap:5px}
+.new-rc{background:var(--panel);border:2px dashed rgba(124,106,247,.3);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:250px;cursor:pointer;transition:all .2s}
+.new-rc:hover{border-color:var(--accent);background:rgba(124,106,247,.07)}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;text-align:center;gap:14px}
+/* TEMPLATE GALLERY */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(7px);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding-top:66px;animation:fin .15s ease}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;width:980px;max-height:84vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.modal-hd{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-ttl{font-size:15px;font-weight:700}
+.modal-x{background:none;border:none;color:var(--t2);font-size:22px;cursor:pointer;padding:2px 6px;border-radius:5px;font-family:var(--font)}
+.modal-x:hover{background:var(--panel);color:var(--t1)}
+.tpl-filters{display:flex;gap:5px;padding:9px 14px;border-bottom:1px solid var(--border);flex-wrap:wrap;flex-shrink:0}
+.chip{padding:4px 11px;border-radius:20px;border:1px solid var(--border);background:var(--panel);color:var(--t2);cursor:pointer;font-size:11px;font-weight:600;font-family:var(--font);transition:all .15s}
+.chip:hover{border-color:var(--accent);color:var(--t1)}
+.chip.on{background:rgba(124,106,247,.2);border-color:var(--accent);color:var(--a2)}
+.tpl-body{display:flex;flex:1;overflow:hidden}
+/* Template list pane */
+.tpl-list{width:240px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;padding:8px}
+.tpl-list::-webkit-scrollbar{width:3px}
+.tpl-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.tpl-row{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:9px;border:1px solid transparent;cursor:pointer;transition:all .15s;margin-bottom:3px}
+.tpl-row:hover{background:var(--panel);border-color:rgba(124,106,247,.2)}
+.tpl-row.hov{background:rgba(124,106,247,.12);border-color:rgba(124,106,247,.3)}
+.tpl-row.sel{background:rgba(124,106,247,.18);border-color:var(--accent)}
+.tpl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.tpl-rn{font-size:12px;font-weight:700;color:var(--t1)}
+.tpl-row.hov .tpl-rn,.tpl-row.sel .tpl-rn{color:var(--a2)}
+.tpl-rt{font-size:10px;color:var(--t3)}
+.tpl-badge{font-size:9px;padding:1px 5px;border-radius:3px;background:var(--ok);color:#fff;font-weight:700;flex-shrink:0}
+/* Preview pane */
+.tpl-prev{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.tpl-prev-bar{padding:9px 14px;background:rgba(0,0,0,.2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.tpl-prev-lbl{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px}
+.tpl-prev-scroll{flex:1;overflow:auto;padding:18px;display:flex;justify-content:center;align-items:flex-start;background:#1a1c26}
+.tpl-prev-scroll::-webkit-scrollbar{width:4px}
+.tpl-prev-scroll::-webkit-scrollbar-thumb{background:#252836;border-radius:2px}
+.tpl-foot{padding:12px 18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg3)}
+.tpl-foot-info{font-size:12px;color:var(--t2)}
+.tpl-foot-info strong{color:var(--t1)}
+/* Add section */
+.add-ov{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(5px);z-index:300;display:flex;align-items:center;justify-content:center}
+.add-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;width:460px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.6)}
+.preset-g{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:12px 14px}
+.preset-c{padding:9px;border-radius:9px;border:1px solid var(--border);background:var(--panel);cursor:pointer;transition:all .15s;text-align:center}
+.preset-c:hover{border-color:var(--accent);background:rgba(124,106,247,.12)}
+/* AI */
+.ai-ov{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(7px);z-index:200;display:flex;align-items:flex-start;justify-content:flex-end;padding:66px 16px 16px}
+.ai-panel{width:450px;height:calc(100vh - 82px);background:var(--bg2);border:1px solid var(--border);border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.ai-hd{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(239,68,68,.07))}
+.ai-ttl{font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px}
+.ai-badge{font-size:10px;padding:2px 6px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-weight:700}
+.ai-body{flex:1;overflow-y:auto;padding:14px}
+.ai-body::-webkit-scrollbar{width:3px}
+.ai-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.score-hero{text-align:center;padding:16px;margin-bottom:12px;background:linear-gradient(135deg,rgba(124,106,247,.12),rgba(245,158,11,.08));border:1px solid rgba(124,106,247,.2);border-radius:11px}
+.score-num{font-size:44px;font-weight:900;line-height:1;background:linear-gradient(135deg,#f59e0b,var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sbar{display:flex;align-items:center;gap:7px;margin:3px 0}
+.sbar-l{font-size:11px;color:var(--t2);min-width:66px;text-align:right}
+.sbar-t{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.sbar-f{height:100%;border-radius:3px;transition:width .8s ease}
+.sbar-v{font-size:11px;font-weight:700;min-width:24px;color:var(--t1)}
+.isec{margin-bottom:12px}
+.isec-ttl{font-size:10px;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.icard{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;border-left-width:3px}
+.icard.e{border-left-color:#f87171}.icard.w{border-left-color:#fbbf24}.icard.o{border-left-color:#34d399}.icard.t{border-left-color:#60a5fa}
+.itag{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-right:4px}
+.itag.e{background:rgba(248,113,113,.15);color:#f87171}.itag.w{background:rgba(251,191,36,.15);color:#fbbf24}.itag.o{background:rgba(52,211,153,.15);color:#34d399}.itag.t{background:rgba(96,165,250,.15);color:#60a5fa}
+.ifield{font-size:10px;color:var(--t3)}
+.itext{font-size:12px;color:var(--t2);line-height:1.6;margin-top:3px}
+.ifix{font-size:11px;color:var(--ok);margin-top:4px;padding:4px 7px;background:rgba(52,211,153,.06);border-radius:4px;line-height:1.6}
+.ai-idle,.ai-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 16px;gap:11px;text-align:center}
+.ai-spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-start{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;border:none;padding:9px 22px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);box-shadow:0 4px 15px rgba(245,158,11,.3);transition:all .2s}
+.ai-start:hover{transform:translateY(-1px)}
+@media print{body *{visibility:hidden}#resume-mount,#resume-mount *{visibility:visible}#resume-mount{position:fixed;top:0;left:0;transform:none!important;width:210mm}@page{size:A4;margin:0}}
+</style>
+</head>
+<body><div id="root"></div>
+<script type="text/babel">
+const {useState,useRef,useEffect}=React;
+const uid=()=>Math.random().toString(36).slice(2,8);
+const fmtD=d=>{if(!d)return'';const[y,m]=d.split('-');return`${y}年${m}月`};
+const now=()=>new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'short',day:'numeric'});
+const LS='resumepro_v3';
+
+/* TEMPLATES */
+const TEMPLATES=[
+  {id:'executive',name:'高管蓝调',tag:'专业商务',c:'#1e3a5f',acc:'#4a9eff',dark:true,sb:true},
+  {id:'corporate',name:'经典商务',tag:'专业商务',c:'#2d2d2d',acc:'#e8c85a',dark:true,sb:false},
+  {id:'finance',name:'金融精英',tag:'专业商务',c:'#1a3a2a',acc:'#5bc4a0',dark:true,sb:true},
+  {id:'consulting',name:'咨询顾问',tag:'专业商务',c:'#2a1f4a',acc:'#a78bfa',dark:true,sb:true},
+  {id:'legal',name:'法律专业',tag:'专业商务',c:'#3d2010',acc:'#d97706',dark:true,sb:false},
+  {id:'minimal',name:'极简白',tag:'极简简约',c:'#0a0a0a',acc:'#374151',dark:false,sb:false},
+  {id:'mono',name:'黑白双色',tag:'极简简约',c:'#111',acc:'#555',dark:false,sb:false},
+  {id:'clean',name:'留白禅意',tag:'极简简约',c:'#1a1a1a',acc:'#6b7280',dark:false,sb:false},
+  {id:'grid',name:'网格秩序',tag:'极简简约',c:'#1e40af',acc:'#3b82f6',dark:false,sb:true},
+  {id:'type',name:'排版至上',tag:'极简简约',c:'#1c1917',acc:'#a16207',dark:false,sb:false},
+  {id:'creative',name:'创意紫调',tag:'创意设计',c:'#4c1d95',acc:'#c4b5fd',dark:true,sb:true},
+  {id:'gradient',name:'渐变流光',tag:'创意设计',c:'#1e1b4b',acc:'#a78bfa',dark:true,sb:false},
+  {id:'coral',name:'珊瑚暖意',tag:'创意设计',c:'#9a3412',acc:'#f97316',dark:false,sb:true},
+  {id:'forest',name:'森林墨绿',tag:'创意设计',c:'#052e16',acc:'#16a34a',dark:true,sb:true},
+  {id:'retro',name:'复古印刷',tag:'创意设计',c:'#78350f',acc:'#b45309',dark:false,sb:false},
+  {id:'academic',name:'学术严谨',tag:'学术科研',c:'#1c1c1c',acc:'#4b5563',dark:false,sb:false},
+  {id:'classic',name:'经典两栏',tag:'学术科研',c:'#374151',acc:'#6b7280',dark:false,sb:true},
+  {id:'oxford',name:'牛津深蓝',tag:'学术科研',c:'#002147',acc:'#9bb8d4',dark:true,sb:true},
+  {id:'dark',name:'暗夜极客',tag:'科技互联网',c:'#050812',acc:'#60a5fa',dark:true,sb:false},
+  {id:'neon',name:'霓虹赛博',tag:'科技互联网',c:'#020617',acc:'#818cf8',dark:true,sb:false},
+];
+const CATS=['全部','专业商务','极简简约','创意设计','学术科研','科技互联网'];
+const getT=id=>TEMPLATES.find(t=>t.id===id)||TEMPLATES[0];
+
+const mkNew=()=>({id:uid(),tplId:'executive',createdAt:now(),
+  profile:{name:'',title:'',phone:'',email:'',location:'',website:'',linkedin:'',github:'',avatar:'',summary:''},
+  sectionOrder:['profile','experience','education','skills','projects','certifications','languages'],
+  customSections:[],experiences:[],educations:[],skills:[],projects:[],certifications:[],languages:[],awards:[],volunteering:[],publications:[]});
+
+const DEMO={id:'demo01',tplId:'executive',createdAt:now(),
+  profile:{name:'李思远',title:'高级产品经理',phone:'139-8888-0000',email:'lisy@example.com',location:'上海市',website:'',linkedin:'',github:'',avatar:'',
+    summary:'6年互联网产品经验，专注用户增长与商业化。主导日活500万级产品核心迭代，擅长数据驱动决策与跨团队协作。'},
+  sectionOrder:['profile','experience','education','skills','projects','certifications','languages'],
+  customSections:[],
+  experiences:[
+    {id:'e1',company:'美团',position:'高级产品经理',location:'上海',dept:'用户增长部',startDate:'2021-06',endDate:'',current:true,bullets:['主导用户激励体系重构，MAU提升22%','上线个性化推荐，点击率提升38%','A/B测试实验数量季度增800%']},
+    {id:'e2',company:'滴滴出行',position:'产品经理',location:'北京',dept:'司机端',startDate:'2018-07',endDate:'2021-05',current:false,bullets:['接单逻辑优化，完单率提升9%','收益可视化功能，NPS提升12分']},
+  ],
+  educations:[{id:'edu1',school:'上海交通大学',degree:'硕士',major:'工业工程',startDate:'2015-09',endDate:'2018-06',gpa:'3.7',honors:''}],
+  skills:[
+    {id:'s1',category:'产品工具',items:'Axure, Figma, JIRA, Tableau',level:5},
+    {id:'s2',category:'数据分析',items:'SQL, Python, A/B测试',level:4},
+    {id:'s3',category:'方法论',items:'OKR, Design Thinking, Scrum',level:5},
+  ],
+  projects:[{id:'p1',name:'用户激励成长体系',role:'产品负责人',url:'',tech:'',startDate:'2022-03',endDate:'2022-10',description:'从0到1设计用户成长体系，覆盖1200万用户，付费率提升18%'}],
+  certifications:[{id:'c1',name:'PMP项目管理认证',issuer:'PMI',date:'2020-06',expiry:'',url:''}],
+  languages:[{id:'l1',language:'英语',level:'流利',note:'CET-6'},{id:'l2',language:'日语',level:'基础',note:'JLPT N3'}],
+  awards:[],volunteering:[],publications:[]};
+
+/* ATOMS */
+function F({label,value,onChange,placeholder,multi,rows=3}){
+  return <div className="fld">
+    {label&&<div className="flb">{label}</div>}
+    {multi?<textarea className="fi" value={value||''} onChange={e=>onChange(e.target.value)} placeholder={placeholder} rows={rows}/>
+          :<input className="fi" value={value||''} onChange={e=>onChange(e.target.value)} placeholder={placeholder}/>}
+  </div>;
+}
+function Sel({label,value,onChange,opts}){
+  return <div className="fld">
+    {label&&<div className="flb">{label}</div>}
+    <select className="fi" value={value||''} onChange={e=>onChange(e.target.value)}>
+      {opts.map(o=><option key={o} value={o}>{o}</option>)}
+    </select>
+  </div>;
+}
+function StarPick({value,onChange}){
+  return <div className="stars">
+    {[1,2,3,4,5].map(n=><span key={n} className={`star${n>value?' e':''}`} onClick={()=>onChange(n)}>★</span>)}
+    <span style={{fontSize:10,color:'var(--t3)',marginLeft:4}}>{['','入门','基础','熟练','精通','专家'][value]}</span>
+  </div>;
+}
+function AvatarUp({value,onChange}){
+  const ref=useRef();
+  const h=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>onChange(ev.target.result);r.readAsDataURL(f);e.target.value=''};
+  return <div className="avwrap">
+    <div className="avc" onClick={()=>ref.current.click()}>
+      {value?<img src={value} alt=""/>:<span>👤</span>}
+      <div className="avov">📷</div>
+    </div>
+    <div className="avmeta">
+      <div style={{fontSize:12,fontWeight:600,color:'var(--t2)'}}>头像照片</div>
+      <div className="avhint">JPG/PNG · 建议1:1方图</div>
+      <div style={{display:'flex',gap:5}}>
+        <button className="bxs" onClick={()=>ref.current.click()}>选择</button>
+        {value&&<button className="bxs bxd" onClick={()=>onChange('')}>移除</button>}
+      </div>
+    </div>
+    <input ref={ref} type="file" accept="image/*" style={{display:'none'}} onChange={h}/>
+  </div>;
+}
+
+/* DRAG-SORT LIST */
+function SList({items,setItems,render,onAdd,addLbl}){
+  const drag=useRef(null);const [ov,setOv]=useState(null);
+  const ds=(e,i)=>{drag.current=i;e.dataTransfer.effectAllowed='move'};
+  const dov=(e,i)=>{e.preventDefault();setOv(i)};
+  const drop=(e,i)=>{
+    e.preventDefault();
+    if(drag.current===null||drag.current===i){drag.current=null;setOv(null);return}
+    const a=[...items];const[rm]=a.splice(drag.current,1);a.splice(i,0,rm);
+    setItems(a);drag.current=null;setOv(null);
+  };
+  const de=()=>{drag.current=null;setOv(null)};
+  return <div>
+    {items.map((item,i)=>(
+      <div key={item.id} draggable onDragStart={e=>ds(e,i)} onDragOver={e=>dov(e,i)} onDrop={e=>drop(e,i)} onDragEnd={de}
+        className={`card${drag.current===i?' dk2':''}${ov===i&&drag.current!==i?' dov2':''}`}>
+        <div className="card-hd">
+          <div className="card-l">
+            <span className="grip">⠿</span>
+            <span className="cnum">{i+1}</span>
+            <span className="clbl">{item.company||item.school||item.name||item.category||item.language||item.org||item.title||`#${i+1}`}</span>
+          </div>
+          <button className="bic" onClick={()=>setItems(items.filter(x=>x.id!==item.id))}>×</button>
+        </div>
+        {render(item,i)}
+      </div>
+    ))}
+    {onAdd&&<button className="bxs" style={{width:'100%'}} onClick={onAdd}>+ {addLbl||'添加'}</button>}
+  </div>;
+}
+
+/* SECTION EDITORS */
+function ProfEd({d,set}){
+  const u=(k,v)=>set({...d,[k]:v});
+  return <div className="esec">
+    <div className="esec-hd"><div className="esec-ttl">👤 基本信息</div></div>
+    <AvatarUp value={d.avatar} onChange={v=>u('avatar',v)}/>
+    <div className="g2">
+      <F label="姓名" value={d.name} onChange={v=>u('name',v)} placeholder="李思远"/>
+      <F label="职位头衔" value={d.title} onChange={v=>u('title',v)} placeholder="高级产品经理"/>
+      <F label="手机" value={d.phone} onChange={v=>u('phone',v)} placeholder="139-0000-0000"/>
+      <F label="邮箱" value={d.email} onChange={v=>u('email',v)} placeholder="you@email.com"/>
+      <F label="城市" value={d.location} onChange={v=>u('location',v)} placeholder="上海市"/>
+      <F label="个人网站" value={d.website} onChange={v=>u('website',v)} placeholder="yoursite.com"/>
+      <F label="LinkedIn" value={d.linkedin} onChange={v=>u('linkedin',v)} placeholder="linkedin.com/in/..."/>
+      <F label="GitHub" value={d.github} onChange={v=>u('github',v)} placeholder="github.com/..."/>
+    </div>
+    <F label="个人简介" value={d.summary} onChange={v=>u('summary',v)} multi rows={4} placeholder="简述专业背景与核心竞争力..."/>
+  </div>;
+}
+function ExpEd({d,set}){
+  const u=(id,k,v)=>set(d.map(e=>e.id===id?{...e,[k]:v}:e));
+  const ub=(id,i,v)=>set(d.map(e=>e.id===id?{...e,bullets:e.bullets.map((b,j)=>j===i?v:b)}:e));
+  const ab=id=>set(d.map(e=>e.id===id?{...e,bullets:[...e.bullets,'']}:e));
+  const rb=(id,i)=>set(d.map(e=>e.id===id?{...e,bullets:e.bullets.filter((_,j)=>j!==i)}:e));
+  return <div className="esec">
+    <div className="esec-hd"><div className="esec-ttl">💼 工作经历</div></div>
+    <SList items={d} setItems={set} addLbl="添加工作经历"
+      onAdd={()=>set([...d,{id:uid(),company:'',position:'',location:'',dept:'',startDate:'',endDate:'',current:false,bullets:['']}])}
+      render={(exp)=><div style={{display:'flex',flexDirection:'column',gap:8}}>
+        <div className="g2">
+          <F label="公司" value={exp.company} onChange={v=>u(exp.id,'company',v)} placeholder="美团"/>
+          <F label="职位" value={exp.position} onChange={v=>u(exp.id,'position',v)} placeholder="高级产品经理"/>
+          <F label="部门" value={exp.dept} onChange={v=>u(exp.id,'dept',v)} placeholder="用户增长部"/>
+          <F label="城市" value={exp.location} onChange={v=>u(exp.id,'location',v)} placeholder="上海"/>
+          <F label="开始时间" value={exp.startDate} onChange={v=>u(exp.id,'startDate',v)} placeholder="2021-06"/>
+          {!exp.current&&<F label="结束时间" value={exp.endDate} onChange={v=>u(exp.id,'endDate',v)} placeholder="2023-12"/>}
+        </div>
+        <label className="tog"><input type="checkbox" checked={exp.current} onChange={e=>u(exp.id,'current',e.target.checked)}/><span>{exp.current?'✅ 目前在职':'已离职'}</span></label>
+        <div className="fld">
+          <div className="flb">工作亮点</div>
+          {exp.bullets.map((b,bi)=><div key={bi} className="br"><span className="bdot">◆</span><input className="fi" style={{flex:1}} value={b} onChange={e=>ub(exp.id,bi,e.target.value)} placeholder="量化成果..."/><button className="bdd" onClick={()=>rb(exp.id,bi)}>×</button></div>)}
+          <button className="badb" onClick={()=>ab(exp.id)}>+ 新增条目</button>
+        </div>
+      </div>}
+    />
+  </div>;
+}
+function EduEd({d,set}){
+  const u=(id,k,v)=>set(d.map(e=>e.id===id?{...e,[k]:v}:e));
+  return <div className="esec">
+    <div className="esec-hd"><div className="esec-ttl">🎓 教育经历</div></div>
+    <SList items={d} setItems={set} addLbl="添加教育经历"
+      onAdd={()=>set([...d,{id:uid(),school:'',degree:'本科',major:'',startDate:'',endDate:'',gpa:'',honors:''}])}
+      render={(edu)=><div className="g2">
+        <F label="学校" value={edu.school} onChange={v=>u(edu.id,'school',v)} placeholder="北京大学"/>
+        <Sel label="学历" value={edu.degree} onChange={v=>u(edu.id,'degree',v)} opts={['本科','硕士','博士','大专','MBA','其他']}/>
+        <F label="专业" value={edu.major} onChange={v=>u(edu.id,'major',v)} placeholder="计算机科学"/>
+        <F label="GPA" value={edu.gpa} onChange={v=>u(edu.id,'gpa',v)} placeholder="3.8/4.0"/>
+        <F label="入学时间" value={edu.startDate} onChange={v=>u(edu.id,'startDate',v)} placeholder="2015-09"/>
+        <F label="毕业时间" value={edu.endDate} onChange={v=>u(edu.id,'endDate',v)} placeholder="2019-06"/>
+        <div style={{gridColumn:'span 2'}}><F label="荣誉备注" value={edu.honors} onChange={v=>u(edu.id,'honors',v)} placeholder="优秀毕业生..."/></div>
+      </div>}
+    />
+  </div>;
+}
+function SkillEd({d,set}){
+  const u=(id,k,v)=>set(d.map(s=>s.id===id?{...s,[k]:v}:s));
+  return <div className="esec">
+    <div className="esec-hd"><div className="esec-ttl">⚡ 技能</div></div>
+    <SList items={d} setItems={set} addLbl="添加技能分类"
+      onAdd={()=>set([...d,{id:uid(),category:'',items:'',level:4}])}
+      render={(sk)=><div style={{display:'flex',flexDirection:'column',gap:8}}>
+        <div className="g2">
+          <div>
+            <F label="类别" value={sk.category} onChange={v=>u(sk.id,'category',v)} placeholder="前端技术"/>
+            <div className="fld" style={{marginTop:6}}><div className="flb">熟练程度</div><StarPick value={sk.level} onChange={v=>u(sk.id,'level',v)}/></div>
+          </div>
+          <F label="技能项（逗号分隔）" value={sk.items} onChange={v=>u(sk.id,'items',v)} placeholder="React, Vue, TypeScript"/>
+        </div>
+      </div>}
+    />
+  </div>;
+}
+function ProjEd({d,set}){
+  const u=(id,k,v)=>set(d.map(p=>p.id===id?{...p,[k]:v}:p));
+  return <div className="esec">
+    <div className="esec-hd"><div className="esec-ttl">🚀 项目 & 作品</div></div>
+    <SList items={d} setItems={set} addLbl="添加项目"
+      onAdd={()=>set([...d,{id:uid(),name:'',role:'',url:'',tech:'',startDate:'',endDate:'',description:''}])}
+      render={(proj)=><div style={{display:'flex',flexDirection:'column',gap:8}}>
+        <div className="g2">
+          <F label="项目名称" value={proj.name} onChange={v=>u(proj.id,'name',v)} placeholder="增长系统"/>
+          <F label="角色" value={proj.role} onChange={v=>u(proj.id,'role',v)} placeholder="产品负责人"/>
+          <F label="链接" value={proj.url} onChange={v=>u(proj.id,'url',v)} placeholder="github.com/..."/>
+          <F label="技术栈" value={proj.tech} onChange={v=>u(proj.id,'tech',v)} placeholder="React, Node.js"/>
+          <F label="开始" value={proj.startDate} onChange={v=>u(proj.id,'startDate',v)} placeholder="2022-03"/>
+          <F label="结束" value={proj.endDate} onChange={v=>u(proj.id,'endDate',v)} placeholder="2022-10"/>
+        </div>
+        <F label="项目描述" value={proj.description} onChange={v=>u(proj.id,'description',v)} multi rows={2} placeholder="背景、职责、量化成果..."/>
+      </div>}
+    />
+  </div>;
+}
+function CertEd({d,set}){
+  const u=(id,k,v)=>set(d.map(c=>c.id===id?{...c,[k]:v}:c));
+  return <div className="esec">
+    <div className="esec-hd"><div className="esec-ttl">🏆 证书 & 资质</div></div>
+    <SList items={d} setItems={set} addLbl="添加证书"
+      onAdd={()=>set([...d,{id:uid(),name:'',issuer:'',date:'',expiry:'',url:''}])}
+      render={(c)=><div className="g2">
+        <F label="证书名称" value={c.name} onChange={v=>u(c.id,'name',v)} placeholder="PMP项目管理"/>
+        <F label="颁发机构" value={c.issuer} onChange={v=>u(c.id,'issuer',v)} placeholder="PMI"/>
+        <F label="获得时间" value={c.date} onChange={v=>u(c.id,'date',v)} placeholder="2022-06"/>
+        <F label="有效期" value={c.expiry} onChange={v=>u(c.id,'expiry',v)} placeholder="2025-06"/>
+        <div style={{gridColumn:'span 2'}}><F label="证书链接" value={c.url} onChange={v=>u(c.id,'url',v)} placeholder="verify.example.com"/></div>
+      </div>}
+    />
+  </div>;
+}
+function LangEd({d,set}){
+  const u=(id,k,v)=>set(d.map(l=>l.id===id?{...l,[k]:v}:l));
+  return <div className="esec">
+    <div className="esec-hd"><div className="esec-ttl">🌐 语言能力</div></div>
+    <SList items={d} setItems={set} addLbl="添加语言"
+      onAdd={()=>set([...d,{id:uid(),language:'',level:'流利',note:''}])}
+      render={(l)=><div style={{display:'flex',flexDirection:'column',gap:8}}>
+        <div className="g2">
+          <F label="语言" value={l.language} onChange={v=>u(l.id,'language',v)} placeholder="英语"/>
+          <Sel label="水平" value={l.level} onChange={v=>u(l.id,'level',v)} opts={['母语','精通','流利','日常沟通','基础','学习中']}/>
+        </div>
+        <F label="备注（如证书成绩）" value={l.note||''} onChange={v=>u(l.id,'note',v)} placeholder="托福 105 / CET-6"/>
+      </div>}
+    />
+  </div>;
+}
+function AwardEd({d,set}){
+  const u=(id,k,v)=>set(d.map(a=>a.id===id?{...a,[k]:v}:a));
+  return <div className="esec">
+    <div className="esec-hd"><div className="esec-ttl">🥇 荣誉 & 奖项</div></div>
+    <SList items={d} setItems={set} addLbl="添加奖项"
+      onAdd={()=>set([...d,{id:uid(),name:'',issuer:'',date:'',description:''}])}
+      render={(a)=><div className="g2">
+        <F label="奖项名称" value={a.name} onChange={v=>u(a.id,'name',v)} placeholder="年度最佳员工"/>
+        <F label="颁奖机构" value={a.issuer} onChange={v=>u(a.id,'issuer',v)} placeholder="美团"/>
+        <F label="获奖时间" value={a.date} onChange={v=>u(a.id,'date',v)} placeholder="2022-12"/>
+        <div/>
+        <div style={{gridColumn:'span 2'}}><F label="描述" value={a.description} onChange={v=>u(a.id,'description',v)} placeholder="全公司3%获此奖..."/></div>
+      </div>}
+    />
+  </div>;
+}
+function VolEd({d,set}){
+  const u=(id,k,v)=>set(d.map(x=>x.id===id?{...x,[k]:v}:x));
+  return <div className="esec">
+    <div className="esec-hd"><div className="esec-ttl">❤️ 志愿服务</div></div>
+    <SList items={d} setItems={set} addLbl="添加志愿经历"
+      onAdd={()=>set([...d,{id:uid(),org:'',role:'',startDate:'',endDate:'',description:''}])}
+      render={(v)=><div style={{display:'flex',flexDirection:'column',gap:8}}>
+        <div className="g2">
+          <F label="组织" value={v.org} onChange={x=>u(v.id,'org',x)} placeholder="联合国儿童基金会"/>
+          <F label="角色" value={v.role} onChange={x=>u(v.id,'role',x)} placeholder="志愿者协调员"/>
+          <F label="开始时间" value={v.startDate} onChange={x=>u(v.id,'startDate',x)} placeholder="2021-06"/>
+          <F label="结束时间" value={v.endDate} onChange={x=>u(v.id,'endDate',x)} placeholder="至今"/>
+        </div>
+        <F label="描述" value={v.description} onChange={x=>u(v.id,'description',x)} multi rows={2} placeholder="参与内容和贡献..."/>
+      </div>}
+    />
+  </div>;
+}
+function PubEd({d,set}){
+  const u=(id,k,v)=>set(d.map(p=>p.id===id?{...p,[k]:v}:p));
+  return <div className="esec">
+    <div className="esec-hd"><div className="esec-ttl">📄 论文 & 出版物</div></div>
+    <SList items={d} setItems={set} addLbl="添加论文"
+      onAdd={()=>set([...d,{id:uid(),title:'',journal:'',date:'',url:'',authors:''}])}
+      render={(p)=><div style={{display:'flex',flexDirection:'column',gap:8}}>
+        <F label="论文标题" value={p.title} onChange={v=>u(p.id,'title',v)} placeholder="基于深度学习的用户行为预测"/>
+        <div className="g2">
+          <F label="期刊/会议" value={p.journal} onChange={v=>u(p.id,'journal',v)} placeholder="ACM CHI 2023"/>
+          <F label="发表时间" value={p.date} onChange={v=>u(p.id,'date',v)} placeholder="2023-05"/>
+          <F label="作者" value={p.authors} onChange={v=>u(p.id,'authors',v)} placeholder="李思远, 张三..."/>
+          <F label="链接" value={p.url} onChange={v=>u(p.id,'url',v)} placeholder="doi.org/..."/>
+        </div>
+      </div>}
+    />
+  </div>;
+}
+function CustEd({sec,onChange,onDel}){
+  const u=(id,k,v)=>onChange({...sec,entries:sec.entries.map(e=>e.id===id?{...e,[k]:v}:e)});
+  return <div className="esec">
+    <div className="esec-hd">
+      <div className="esec-ttl">
+        <span>{sec.icon||'📌'}</span>
+        <input className="fi" style={{fontSize:13,fontWeight:700,width:120,padding:'2px 6px'}} value={sec.name} onChange={e=>onChange({...sec,name:e.target.value})}/>
+      </div>
+      <div style={{display:'flex',gap:5}}>
+        <button className="bxs" onClick={()=>onChange({...sec,entries:[...sec.entries,{id:uid(),title:'',subtitle:'',date:'',description:''}]})}>+ 添加</button>
+        <button className="bxs bxd" onClick={onDel}>删除栏目</button>
+      </div>
+    </div>
+    <SList items={sec.entries} setItems={es=>onChange({...sec,entries:es})}
+      render={(e)=><div style={{display:'flex',flexDirection:'column',gap:8}}>
+        <div className="g2">
+          <F label="标题" value={e.title} onChange={v=>u(e.id,'title',v)} placeholder="标题"/>
+          <F label="副标题" value={e.subtitle} onChange={v=>u(e.id,'subtitle',v)} placeholder="机构/地点"/>
+          <F label="时间" value={e.date} onChange={v=>u(e.id,'date',v)} placeholder="2022"/>
+        </div>
+        <F label="描述" value={e.description} onChange={v=>u(e.id,'description',v)} multi rows={2} placeholder="详情..."/>
+      </div>}
+    />
+  </div>;
+}
+
+/* COMPACT SECTION NAV */
+const ALL_S={profile:{l:'基本',i:'👤'},experience:{l:'工作',i:'💼'},education:{l:'教育',i:'🎓'},skills:{l:'技能',i:'⚡'},projects:{l:'项目',i:'🚀'},certifications:{l:'证书',i:'🏆'},languages:{l:'语言',i:'🌐'},awards:{l:'荣誉',i:'🥇'},volunteering:{l:'志愿',i:'❤️'},publications:{l:'论文',i:'📄'}};
+const PRESET_S=[{key:'awards',icon:'🥇',name:'荣誉奖项'},{key:'volunteering',icon:'❤️',name:'志愿服务'},{key:'publications',icon:'📄',name:'论文出版'},{key:'certifications',icon:'🏆',name:'证书资质'},{key:'languages',icon:'🌐',name:'语言能力'}];
+
+function SecNav({order,setOrder,custom,setCustom,active,setActive,onAdd}){
+  const drag=useRef(null);const [ov,setOv]=useState(null);
+  const all=[
+    ...order.map(id=>({id,label:ALL_S[id]?.l||id,icon:ALL_S[id]?.i||'📌',preset:true})),
+    ...custom.map(cs=>({id:cs.id,label:(cs.name||'').slice(0,4),icon:cs.icon||'📌',preset:false})),
+  ];
+  const ds=(e,i)=>{drag.current=i;e.dataTransfer.effectAllowed='move'};
+  const dov=(e,i)=>{e.preventDefault();setOv(i)};
+  const drop=(e,i)=>{
+    e.preventDefault();
+    if(drag.current===null||drag.current===i){drag.current=null;setOv(null);return}
+    const a=[...all];const[rm]=a.splice(drag.current,1);a.splice(i,0,rm);
+    setOrder(a.filter(x=>x.preset).map(x=>x.id));
+    setCustom(a.filter(x=>!x.preset).map(x=>custom.find(cs=>cs.id===x.id)).filter(Boolean));
+    drag.current=null;setOv(null);
+  };
+  const de=()=>{drag.current=null;setOv(null)};
+  const rm=(item)=>{
+    if(item.id==='profile')return;
+    if(item.preset)setOrder(order.filter(x=>x!==item.id));
+    else setCustom(custom.filter(cs=>cs.id!==item.id));
+    if(active===item.id)setActive('profile');
+  };
+  return <div className="snav">
+    <div className="snav-row">
+      {all.map((item,i)=>(
+        <div key={item.id} draggable onDragStart={e=>ds(e,i)} onDragOver={e=>dov(e,i)} onDrop={e=>drop(e,i)} onDragEnd={de}
+          className={`sch${active===item.id?' act':''}${drag.current===i?' dk':''}${ov===i&&drag.current!==i?' dov':''}`}
+          onClick={()=>setActive(item.id)} title={ALL_S[item.id]?.l||item.label}>
+          <span className="sch-grip">⠿</span>
+          <span style={{fontSize:12}}>{item.icon}</span>
+          <span>{item.label}</span>
+          {item.id!=='profile'&&<button className="sch-del" onClick={e=>{e.stopPropagation();rm(item)}}>×</button>}
+        </div>
+      ))}
+      <button className="sadd" onClick={onAdd}>＋</button>
+    </div>
+  </div>;
+}
+
+/* ADD SECTION MODAL */
+function AddSecModal({onClose,onAdd,existing}){
+  const [name,setName]=useState('');const [icon,setIcon]=useState('📌');
+  const avail=PRESET_S.filter(p=>!existing.includes(p.key));
+  return <div className="add-ov" onClick={e=>{if(e.target===e.currentTarget)onClose()}}>
+    <div className="add-box">
+      <div className="modal-hd"><span className="modal-ttl">➕ 添加栏目</span><button className="modal-x" onClick={onClose}>×</button></div>
+      {avail.length>0&&<div className="preset-g">
+        {avail.map(p=><div key={p.key} className="preset-c" onClick={()=>{onAdd({type:'preset',key:p.key});onClose()}}>
+          <div style={{fontSize:20,marginBottom:3}}>{p.icon}</div><div style={{fontSize:11,fontWeight:600,color:'var(--t2)'}}>{p.name}</div>
+        </div>)}
+      </div>}
+      <div style={{padding:'0 14px 14px',borderTop:'1px solid var(--border)',marginTop:6,paddingTop:12}}>
+        <div style={{fontSize:11,fontWeight:700,color:'var(--t3)',textTransform:'uppercase',letterSpacing:1,marginBottom:7}}>自定义栏目</div>
+        <div style={{display:'flex',gap:7,alignItems:'flex-end'}}>
+          <input className="fi" style={{width:44,textAlign:'center',fontSize:18,padding:'5px'}} value={icon} onChange={e=>setIcon(e.target.value)}/>
+          <div style={{flex:1}}><input className="fi" value={name} onChange={e=>setName(e.target.value)} placeholder="栏目名称..."/></div>
+          <button className="bxs" onClick={()=>{if(name.trim()){onAdd({type:'custom',icon,name:name.trim()});onClose()}}}>确认</button>
+        </div>
+      </div>
+    </div>
+  </div>;
+}
+
+/* RESUME RENDERER */
+function Resume({data,tplId}){
+  const t=getT(tplId);
+  const {profile:p={},experiences:exps=[],educations:edus=[],skills=[],projects=[],certifications:certs=[],languages:langs=[],awards=[],volunteering:vols=[],publications:pubs=[],customSections:cust=[]}=data;
+  const bT=t.dark?'rgba(255,255,255,.68)':'#374151';
+  const hT=t.dark?'#f0f6ff':'#111827';
+  const dT=t.dark?'rgba(255,255,255,.32)':'#9ca3af';
+  const isDk=['dark','neon','gradient'].includes(t.id);
+  const pgBg=isDk?({dark:'#050812',neon:'#020617',gradient:'linear-gradient(160deg,#0f172a 0%,#1e1b4b 60%,#0f172a 100%)'}[t.id]):t.id==='retro'?'#fef3c7':t.id==='type'?'#fffdf9':'#fff';
+  const Bul=({bs,col})=>bs.filter(Boolean).length>0&&<ul style={{paddingLeft:'4mm',marginTop:'2mm'}}>
+    {bs.filter(Boolean).map((b,i)=><li key={i} style={{fontSize:'8pt',color:col||bT,marginBottom:'1.5mm',lineHeight:1.6}}>{b}</li>)}
+  </ul>;
+  const SHd=({c})=><div style={{fontSize:'7pt',fontWeight:800,color:'rgba(255,255,255,.4)',textTransform:'uppercase',letterSpacing:'1.5px',marginBottom:'2mm'}}>{c}</div>;
+  const MHd=({c})=><div style={{fontSize:'8pt',fontWeight:800,color:hT,textTransform:'uppercase',letterSpacing:'1.2px',borderBottom:`1.5px solid ${t.acc}`,paddingBottom:'1.5mm',marginBottom:'3mm',display:'flex',alignItems:'center',gap:'2mm'}}>{c}<span style={{flex:1,height:'1.5px',background:`linear-gradient(90deg,${t.acc}40,transparent)`}}/></div>;
+
+  if(t.sb)return <div id="resume-mount" style={{width:'210mm',minHeight:'297mm',fontFamily:"'Noto Sans SC',sans-serif",display:'flex',boxShadow:'0 8px 40px rgba(0,0,0,.5)'}}>
+    <div style={{width:'65mm',background:t.c,padding:'9mm 7mm',flexShrink:0,display:'flex',flexDirection:'column',gap:'5mm'}}>
+      {p.avatar?<img src={p.avatar} style={{width:'22mm',height:'22mm',borderRadius:'50%',objectFit:'cover',margin:'0 auto 2mm',border:`2px solid ${t.acc}55`}} alt=""/>
+      :<div style={{width:'22mm',height:'22mm',borderRadius:'50%',background:`${t.acc}33`,display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 2mm',fontSize:'18pt',fontWeight:900,color:t.acc}}>{(p.name||'简')[0]}</div>}
+      <div style={{textAlign:'center'}}>
+        <div style={{fontSize:'13pt',fontWeight:900,color:'#fff',lineHeight:1.2}}>{p.name||'姓名'}</div>
+        <div style={{fontSize:'8pt',color:t.acc,marginTop:'1.5mm',fontWeight:600}}>{p.title}</div>
+      </div>
+      <div><SHd c="联系方式"/>
+        {[['📱',p.phone],['✉',p.email],['📍',p.location],['🌐',p.website]].filter(x=>x[1]).map(([ic,v],k)=>(
+          <div key={k} style={{fontSize:'7pt',color:'rgba(255,255,255,.75)',marginBottom:'1.5mm',display:'flex',gap:'2mm',wordBreak:'break-all'}}><span>{ic}</span><span>{v}</span></div>
+        ))}
+      </div>
+      {skills.length>0&&<div><SHd c="技能"/>
+        {skills.map(sk=><div key={sk.id} style={{marginBottom:'2.5mm'}}>
+          <div style={{fontSize:'7.5pt',fontWeight:700,color:t.acc,marginBottom:'1mm'}}>{sk.category}</div>
+          <div style={{color:'#fbbf24',fontSize:'8pt',letterSpacing:'.5px'}}>{'★'.repeat(sk.level)}{'☆'.repeat(5-sk.level)}</div>
+          <div style={{fontSize:'6.5pt',color:'rgba(255,255,255,.5)',marginTop:'.8mm'}}>{sk.items}</div>
+        </div>)}
+      </div>}
+      {langs.length>0&&<div><SHd c="语言能力"/>{langs.map(l=><div key={l.id} style={{fontSize:'7.5pt',color:'rgba(255,255,255,.8)',marginBottom:'1.5mm'}}>{l.language} · <span style={{color:t.acc}}>{l.level}</span>{l.note&&<div style={{fontSize:'6.5pt',color:'rgba(255,255,255,.4)'}}>{l.note}</div>}</div>)}</div>}
+      {certs.length>0&&<div><SHd c="证书"/>{certs.map(c=><div key={c.id} style={{fontSize:'7pt',color:'rgba(255,255,255,.75)',marginBottom:'1.5mm'}}>{c.name}<div style={{fontSize:'6.5pt',color:'rgba(255,255,255,.4)'}}>{c.issuer}</div></div>)}</div>}
+      {edus.length>0&&<div><SHd c="教育经历"/>{edus.map(e=><div key={e.id} style={{marginBottom:'3mm'}}><div style={{fontSize:'8pt',fontWeight:700,color:'#fff'}}>{e.school}</div><div style={{fontSize:'7pt',color:'rgba(255,255,255,.65)'}}>{e.degree} · {e.major}</div><div style={{fontSize:'6.5pt',color:'rgba(255,255,255,.4)'}}>{fmtD(e.startDate)} — {fmtD(e.endDate)}</div></div>)}</div>}
+      {awards.length>0&&<div><SHd c="荣誉"/>{awards.map(a=><div key={a.id} style={{fontSize:'7pt',color:'rgba(255,255,255,.75)',marginBottom:'1.5mm'}}>{a.name}</div>)}</div>}
+      {cust.map(cs=><div key={cs.id}><SHd c={cs.name}/>{cs.entries.map(e=><div key={e.id} style={{fontSize:'7pt',color:'rgba(255,255,255,.75)',marginBottom:'1.5mm'}}>{e.title}</div>)}</div>)}
+    </div>
+    <div style={{flex:1,padding:'8mm 8mm',background:['coral','grid','forest','classic','oxford'].includes(t.id)?'#fff':pgBg}}>
+      {p.summary&&<div style={{marginBottom:'5mm'}}><MHd c="个人简介"/><p style={{fontSize:'8.5pt',color:bT,lineHeight:1.7}}>{p.summary}</p></div>}
+      {exps.length>0&&<div style={{marginBottom:'5mm'}}><MHd c="工作经历"/>
+        {exps.map(e=><div key={e.id} style={{marginBottom:'4mm'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+            <div><div style={{fontSize:'9.5pt',fontWeight:700,color:hT}}>{e.company}{e.dept&&<span style={{fontSize:'8pt',color:bT,fontWeight:400}}> · {e.dept}</span>}</div>
+            <div style={{fontSize:'8.5pt',color:t.acc,fontWeight:600}}>{e.position}{e.location&&<span style={{color:bT,fontWeight:400}}> · {e.location}</span>}</div></div>
+            <div style={{fontSize:'7.5pt',color:dT,whiteSpace:'nowrap'}}>{fmtD(e.startDate)} — {e.current?'至今':fmtD(e.endDate)}</div>
+          </div>
+          <Bul bs={e.bullets}/>
+        </div>)}
+      </div>}
+      {projects.length>0&&<div style={{marginBottom:'5mm'}}><MHd c="项目作品"/>
+        {projects.map(pr=><div key={pr.id} style={{marginBottom:'3.5mm'}}>
+          <div style={{fontSize:'9pt',fontWeight:700,color:hT}}>{pr.name}{pr.url&&<span style={{fontSize:'7.5pt',color:dT,fontWeight:400}}> · {pr.url}</span>}</div>
+          {pr.role&&<div style={{fontSize:'8pt',color:t.acc,fontWeight:500}}>{pr.role}</div>}
+          {pr.description&&<p style={{fontSize:'8pt',color:bT,marginTop:'1.5mm',lineHeight:1.6}}>{pr.description}</p>}
+        </div>)}
+      </div>}
+      {vols.length>0&&<div style={{marginBottom:'5mm'}}><MHd c="志愿服务"/>{vols.map(v=><div key={v.id} style={{marginBottom:'3mm'}}><div style={{display:'flex',justifyContent:'space-between'}}><div style={{fontSize:'9pt',fontWeight:700,color:hT}}>{v.org}</div><div style={{fontSize:'7.5pt',color:dT}}>{v.endDate}</div></div><div style={{fontSize:'8pt',color:t.acc}}>{v.role}</div>{v.description&&<p style={{fontSize:'7.5pt',color:bT,lineHeight:1.6,marginTop:'1mm'}}>{v.description}</p>}</div>)}</div>}
+      {awards.length>0&&<div style={{marginBottom:'5mm'}}><MHd c="荣誉奖项"/>{awards.map(a=><div key={a.id} style={{marginBottom:'2.5mm',display:'flex',justifyContent:'space-between'}}><div><div style={{fontSize:'8.5pt',fontWeight:700,color:hT}}>{a.name}</div>{a.issuer&&<div style={{fontSize:'7.5pt',color:bT}}>{a.issuer}</div>}</div><div style={{fontSize:'7.5pt',color:dT}}>{a.date}</div></div>)}</div>}
+      {pubs.length>0&&<div style={{marginBottom:'5mm'}}><MHd c="论文出版物"/>{pubs.map(pub=><div key={pub.id} style={{marginBottom:'3mm'}}><div style={{fontSize:'9pt',fontWeight:700,color:hT,fontStyle:'italic'}}>{pub.title}</div><div style={{fontSize:'7.5pt',color:bT}}>{pub.journal} {fmtD(pub.date)}</div></div>)}</div>}
+      {cust.map(cs=><div key={cs.id} style={{marginBottom:'5mm'}}><MHd c={cs.name}/>{cs.entries.map(e=><div key={e.id} style={{marginBottom:'2.5mm'}}><div style={{fontSize:'8.5pt',fontWeight:700,color:hT}}>{e.title}</div>{e.subtitle&&<div style={{fontSize:'7.5pt',color:bT}}>{e.subtitle}</div>}{e.description&&<p style={{fontSize:'7.5pt',color:bT,lineHeight:1.6}}>{e.description}</p>}</div>)}</div>)}
+    </div>
+  </div>;
+
+  return <div id="resume-mount" style={{width:'210mm',minHeight:'297mm',fontFamily:"'Noto Sans SC',sans-serif",background:pgBg,boxShadow:'0 8px 40px rgba(0,0,0,.5)'}}>
+    <div style={{background:t.c,padding:'8mm 10mm'}}>
+      <div style={{display:'flex',alignItems:'center',gap:'4mm'}}>
+        {p.avatar&&<img src={p.avatar} style={{width:'18mm',height:'18mm',borderRadius:'50%',objectFit:'cover',border:`2px solid ${t.acc}55`,flexShrink:0}} alt=""/>}
+        <div style={{flex:1}}>
+          <div style={{fontSize:'22pt',fontWeight:900,color:'#fff',letterSpacing:'-.5px',lineHeight:1}}>{p.name||'姓名'}</div>
+          <div style={{fontSize:'9pt',color:t.acc,marginTop:'2mm',fontWeight:600}}>{p.title}</div>
+          <div style={{display:'flex',flexWrap:'wrap',gap:'2mm 8mm',marginTop:'2mm'}}>
+            {[p.phone,p.email,p.location,p.website].filter(Boolean).map((v,i)=><span key={i} style={{fontSize:'7.5pt',color:'rgba(255,255,255,.7)'}}>{v}</span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style={{padding:'7mm 10mm'}}>
+      {p.summary&&<div style={{marginBottom:'5mm',padding:'3.5mm',background:`${t.acc}14`,borderLeft:`3px solid ${t.acc}`,borderRadius:'0 4px 4px 0'}}><p style={{fontSize:'8.5pt',color:bT,lineHeight:1.7}}>{p.summary}</p></div>}
+      {exps.length>0&&<div style={{marginBottom:'5mm'}}>
+        <div style={{fontSize:'8pt',fontWeight:800,color:isDk?t.acc:hT,textTransform:'uppercase',letterSpacing:'1.5px',borderBottom:`2px solid ${t.acc}`,paddingBottom:'2mm',marginBottom:'3.5mm'}}>工作经历</div>
+        {exps.map(e=><div key={e.id} style={{marginBottom:'3.5mm'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline'}}>
+            <div style={{fontSize:'9.5pt',fontWeight:800,color:hT}}>{e.company}</div>
+            <div style={{fontSize:'7.5pt',color:dT}}>{fmtD(e.startDate)} — {e.current?'至今':fmtD(e.endDate)}</div>
+          </div>
+          <div style={{fontSize:'8.5pt',color:t.acc,fontWeight:700}}>{e.position}{e.location&&<span style={{color:bT,fontWeight:400}}> · {e.location}</span>}</div>
+          <Bul bs={e.bullets}/>
+        </div>)}
+      </div>}
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'5mm',marginBottom:'5mm'}}>
+        {edus.length>0&&<div>
+          <div style={{fontSize:'8pt',fontWeight:800,color:isDk?t.acc:hT,textTransform:'uppercase',letterSpacing:'1.5px',borderBottom:`2px solid ${t.acc}`,paddingBottom:'2mm',marginBottom:'3mm'}}>教育经历</div>
+          {edus.map(e=><div key={e.id} style={{marginBottom:'3mm'}}>
+            <div style={{fontSize:'9pt',fontWeight:700,color:hT}}>{e.school}</div>
+            <div style={{fontSize:'8pt',color:bT}}>{e.degree} · {e.major}{e.gpa&&` · GPA ${e.gpa}`}</div>
+            <div style={{fontSize:'7.5pt',color:dT}}>{fmtD(e.startDate)} — {fmtD(e.endDate)}</div>
+          </div>)}
+        </div>}
+        {skills.length>0&&<div>
+          <div style={{fontSize:'8pt',fontWeight:800,color:isDk?t.acc:hT,textTransform:'uppercase',letterSpacing:'1.5px',borderBottom:`2px solid ${t.acc}`,paddingBottom:'2mm',marginBottom:'3mm'}}>技能</div>
+          {skills.map(sk=><div key={sk.id} style={{marginBottom:'2.5mm',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+            <div><div style={{fontSize:'8pt',fontWeight:700,color:bT}}>{sk.category}</div>
+            <div style={{fontSize:'7.5pt',color:isDk?'rgba(255,255,255,.45)':'#888'}}>{sk.items}</div></div>
+            <span style={{color:'#fbbf24',fontSize:'8pt',flexShrink:0,marginLeft:'2mm'}}>{'★'.repeat(sk.level)}{'☆'.repeat(5-sk.level)}</span>
+          </div>)}
+        </div>}
+      </div>
+      {langs.length>0&&<div style={{marginBottom:'5mm'}}>
+        <div style={{fontSize:'8pt',fontWeight:800,color:isDk?t.acc:hT,textTransform:'uppercase',letterSpacing:'1.5px',borderBottom:`2px solid ${t.acc}`,paddingBottom:'2mm',marginBottom:'3mm'}}>语言能力</div>
+        <div style={{display:'flex',gap:'7mm',flexWrap:'wrap'}}>{langs.map(l=><span key={l.id} style={{fontSize:'8.5pt',color:bT}}>{l.language} · <strong style={{color:t.acc}}>{l.level}</strong>{l.note&&<span style={{fontSize:'7.5pt',color:dT}}> ({l.note})</span>}</span>)}</div>
+      </div>}
+      {certs.length>0&&<div style={{marginBottom:'5mm'}}>
+        <div style={{fontSize:'8pt',fontWeight:800,color:isDk?t.acc:hT,textTransform:'uppercase',letterSpacing:'1.5px',borderBottom:`2px solid ${t.acc}`,paddingBottom:'2mm',marginBottom:'3mm'}}>证书</div>
+        <div style={{display:'flex',flexWrap:'wrap',gap:'2mm'}}>{certs.map(c=><span key={c.id} style={{fontSize:'8pt',color:bT,background:`${t.acc}18`,padding:'1mm 3mm',borderRadius:3,border:`1px solid ${t.acc}33`}}>{c.name}{c.issuer&&<span style={{color:dT}}> · {c.issuer}</span>}</span>)}</div>
+      </div>}
+      {projects.length>0&&<div style={{marginBottom:'5mm'}}>
+        <div style={{fontSize:'8pt',fontWeight:800,color:isDk?t.acc:hT,textTransform:'uppercase',letterSpacing:'1.5px',borderBottom:`2px solid ${t.acc}`,paddingBottom:'2mm',marginBottom:'3mm'}}>项目作品</div>
+        {projects.map(pr=><div key={pr.id} style={{marginBottom:'3mm'}}>
+          <div style={{fontSize:'9pt',fontWeight:700,color:hT}}>{pr.name}{pr.url&&<span style={{fontSize:'7.5pt',color:dT,fontWeight:400}}> · {pr.url}</span>}</div>
+          {pr.role&&<div style={{fontSize:'8pt',color:t.acc}}>{pr.role}</div>}
+          {pr.description&&<p style={{fontSize:'8pt',color:bT,marginTop:'1.5mm',lineHeight:1.6}}>{pr.description}</p>}
+        </div>)}
+      </div>}
+      {awards.length>0&&<div style={{marginBottom:'5mm'}}>
+        <div style={{fontSize:'8pt',fontWeight:800,color:isDk?t.acc:hT,textTransform:'uppercase',letterSpacing:'1.5px',borderBottom:`2px solid ${t.acc}`,paddingBottom:'2mm',marginBottom:'3mm'}}>荣誉奖项</div>
+        {awards.map(a=><div key={a.id} style={{marginBottom:'2.5mm',display:'flex',justifyContent:'space-between'}}><div><div style={{fontSize:'8.5pt',fontWeight:700,color:hT}}>{a.name}</div>{a.issuer&&<div style={{fontSize:'7.5pt',color:bT}}>{a.issuer}</div>}</div><div style={{fontSize:'7.5pt',color:dT}}>{a.date}</div></div>)}
+      </div>}
+      {vols.length>0&&<div style={{marginBottom:'5mm'}}>
+        <div style={{fontSize:'8pt',fontWeight:800,color:isDk?t.acc:hT,textTransform:'uppercase',letterSpacing:'1.5px',borderBottom:`2px solid ${t.acc}`,paddingBottom:'2mm',marginBottom:'3mm'}}>志愿服务</div>
+        {vols.map(v=><div key={v.id} style={{marginBottom:'3mm'}}><div style={{display:'flex',justifyContent:'space-between'}}><div style={{fontSize:'9pt',fontWeight:700,color:hT}}>{v.org}</div><div style={{fontSize:'7.5pt',color:dT}}>{v.startDate}</div></div><div style={{fontSize:'8pt',color:t.acc}}>{v.role}</div>{v.description&&<p style={{fontSize:'7.5pt',color:bT,lineHeight:1.6,marginTop:'1mm'}}>{v.description}</p>}</div>)}
+      </div>}
+      {cust.map(cs=><div key={cs.id} style={{marginBottom:'5mm'}}>
+        <div style={{fontSize:'8pt',fontWeight:800,color:isDk?t.acc:hT,textTransform:'uppercase',letterSpacing:'1.5px',borderBottom:`2px solid ${t.acc}`,paddingBottom:'2mm',marginBottom:'3mm'}}>{cs.name}</div>
+        {cs.entries.map(e=><div key={e.id} style={{marginBottom:'2.5mm'}}><div style={{fontSize:'8.5pt',fontWeight:700,color:hT}}>{e.title}</div>{e.subtitle&&<div style={{fontSize:'7.5pt',color:bT}}>{e.subtitle}</div>}{e.description&&<p style={{fontSize:'7.5pt',color:bT,lineHeight:1.6}}>{e.description}</p>}</div>)}
+      </div>)}
+    </div>
+  </div>;
+}
+
+/* TEMPLATE GALLERY — left list + right live preview + try/select footer */
+function TplGallery({current,onSelect,onClose,sample}){
+  const [cat,setCat]=useState('全部');
+  const [hov,setHov]=useState(current);
+  const [pz,setPz]=useState(0.44);
+  const list=cat==='全部'?TEMPLATES:TEMPLATES.filter(t=>t.tag===cat);
+  const pt=getT(hov);
+  return <div className="ov" onClick={e=>{if(e.target===e.currentTarget)onClose()}}>
+    <div className="modal">
+      <div className="modal-hd">
+        <span className="modal-ttl">🎨 模板库 <span style={{fontSize:11,color:'var(--t3)',fontWeight:400}}>共{TEMPLATES.length}套 · 悬停左侧即时预览</span></span>
+        <button className="modal-x" onClick={onClose}>×</button>
+      </div>
+      <div className="tpl-filters">{CATS.map(c=><button key={c} className={`chip${cat===c?' on':''}`} onClick={()=>setCat(c)}>{c}</button>)}</div>
+      <div className="tpl-body">
+        {/* Left: scrollable list */}
+        <div className="tpl-list">
+          {list.map(t=>(
+            <div key={t.id} className={`tpl-row${hov===t.id?' hov':''}${current===t.id?' sel':''}`}
+              onMouseEnter={()=>setHov(t.id)} onClick={()=>setHov(t.id)}>
+              <div className="tpl-dot" style={{background:t.acc}}/>
+              <div style={{flex:1}}>
+                <div className="tpl-rn">{t.name}</div>
+                <div className="tpl-rt">{t.tag}</div>
+              </div>
+              {current===t.id&&<span className="tpl-badge">✓</span>}
+            </div>
+          ))}
+        </div>
+        {/* Right: live preview */}
+        <div className="tpl-prev">
+          <div className="tpl-prev-bar">
+            <div style={{display:'flex',alignItems:'center',gap:8}}>
+              <span className="tpl-prev-lbl">实时预览</span>
+              <span style={{fontSize:11,color:'var(--t2)',fontWeight:600}}>{pt.name}</span>
+              <span style={{fontSize:10,color:'var(--t3)'}}>· {pt.tag}</span>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:3}}>
+              <button className="zbtn" onClick={()=>setPz(z=>Math.max(.22,+(z-.05).toFixed(2)))}>−</button>
+              <span className="zval">{Math.round(pz*100)}%</span>
+              <button className="zbtn" onClick={()=>setPz(z=>Math.min(.85,+(z+.05).toFixed(2)))}>+</button>
+            </div>
+          </div>
+          <div className="tpl-prev-scroll">
+            <div style={{transformOrigin:'top center',transform:`scale(${pz})`}}>
+              <Resume data={sample} tplId={hov}/>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Footer: try + confirm */}
+      <div className="tpl-foot">
+        <div className="tpl-foot-info">
+          预览中：<strong>{pt.name}</strong>
+          {current===hov
+            ?<span style={{color:'var(--ok)',marginLeft:8,fontSize:11}}>✓ 当前已选</span>
+            :<span style={{color:'var(--t3)',marginLeft:8,fontSize:11}}>· 悬停左侧切换预览</span>}
+        </div>
+        <div style={{display:'flex',gap:8}}>
+          <button className="btn gh" onClick={onClose}>取消</button>
+          {hov!==current&&(
+            <button className="btn gh" style={{borderColor:'rgba(124,106,247,.4)',color:'var(--a2)'}}
+              onClick={()=>{onSelect(hov);onClose()}}>
+              👁 试用效果
+            </button>
+          )}
+          <button className="btn ba" onClick={()=>{onSelect(hov);onClose()}}>
+            ✓ 确认选择「{pt.name}」
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>;
+}
+
+/* AI DIAGNOSIS PANEL */
+function AiPanel({data,onClose}){
+  const [st,setSt]=useState('idle');const [res,setRes]=useState(null);const [err,setErr]=useState('');
+  const run=async()=>{
+    setSt('loading');
+    const p=data.profile||{};
+    const prompt=`你是专业中国职场简历顾问。对以下简历进行深度诊断，直接返回JSON，不加任何其他文字。
+
+姓名：${p.name} 职位：${p.title} 城市：${p.location}
+简介：${p.summary}
+工作：${(data.experiences||[]).map(e=>`${e.company}·${e.position}(${e.startDate}—${e.current?'至今':e.endDate}) ${(e.bullets||[]).filter(Boolean).join('；')}`).join('\n')}
+教育：${(data.educations||[]).map(e=>`${e.school} ${e.degree} ${e.major}`).join('；')}
+技能：${(data.skills||[]).map(s=>`${s.category}:${s.items}`).join('；')}
+项目：${(data.projects||[]).map(pr=>`${pr.name}(${pr.role}) ${pr.description}`).join('；')}
+语言：${(data.languages||[]).map(l=>`${l.language}${l.level}`).join('；')}
+证书：${(data.certifications||[]).map(c=>c.name).join('；')||'无'}
+
+JSON格式：{"totalScore":数字0-100,"grade":"S/A/B/C/D","gradeLabel":"优秀/良好/一般/较差","dimensions":[{"name":"内容完整度","score":数字,"color":"#34d399"},{"name":"工作经历质量","score":数字,"color":"#60a5fa"},{"name":"量化成果","score":数字,"color":"#f59e0b"},{"name":"技能匹配度","score":数字,"color":"#a78bfa"},{"name":"表达清晰度","score":数字,"color":"#f87171"}],"summary":"总体评价2-3句","issues":[{"level":"error/warn/ok/tip","field":"部分名","text":"问题描述","fix":"具体修改建议"}]}
+issues至少8条，具体可操作，覆盖错误、警告、亮点、优化。`;
+    try{
+      const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:prompt}]})});
+      const d=await r.json();
+      const txt=(d.content?.find(b=>b.type==='text')?.text||'').replace(/```json|```/g,'').trim();
+      setRes(JSON.parse(txt));setSt('done');
+    }catch(e){setErr('分析失败，请检查网络后重试');setSt('error');}
+  };
+  const gc=g=>({S:'#f59e0b',A:'#34d399',B:'#60a5fa',C:'#fbbf24',D:'#f87171'}[g]||'#a78bfa');
+  const lm={error:{l:'问题',c:'e'},warn:{l:'建议',c:'w'},ok:{l:'亮点',c:'o'},tip:{l:'优化',c:'t'}};
+  return <div className="ai-ov" onClick={e=>{if(e.target===e.currentTarget)onClose()}}>
+    <div className="ai-panel">
+      <div className="ai-hd">
+        <div className="ai-ttl"><span>🤖 AI 简历诊断</span><span className="ai-badge">Claude AI</span></div>
+        <button className="modal-x" onClick={onClose}>×</button>
+      </div>
+      <div className="ai-body">
+        {st==='idle'&&<div className="ai-idle">
+          <div style={{fontSize:40}}>🔍</div>
+          <div style={{fontSize:14,fontWeight:700}}>AI 深度诊断</div>
+          <div style={{fontSize:12,color:'var(--t2)',lineHeight:1.7}}>从<strong>内容完整度、工作经历质量<br/>量化成果、技能匹配度、表达清晰度</strong><br/>五维评分，给出可落地的修改建议</div>
+          <button className="ai-start" onClick={run}>🚀 开始诊断（约15秒）</button>
+        </div>}
+        {st==='loading'&&<div className="ai-loading">
+          <div className="ai-spinner"/>
+          <div style={{fontSize:13,color:'var(--t2)'}}>正在深度分析你的简历...</div>
+          <div style={{fontSize:11,color:'var(--t3)'}}>AI正在评估内容质量与表达清晰度</div>
+        </div>}
+        {st==='error'&&<div className="ai-idle">
+          <div style={{fontSize:36}}>😞</div>
+          <div style={{fontSize:14,fontWeight:700}}>{err}</div>
+          <button className="ai-start" onClick={run}>🔄 重新分析</button>
+        </div>}
+        {st==='done'&&res&&<div>
+          <div className="score-hero">
+            <div className="score-num">{res.totalScore}</div>
+            <div style={{fontSize:14,fontWeight:800,color:gc(res.grade),marginTop:4}}>{res.grade}级 · {res.gradeLabel}</div>
+            <div style={{fontSize:12,color:'var(--t2)',marginTop:6,lineHeight:1.6}}>{res.summary}</div>
+          </div>
+          <div style={{marginBottom:12,padding:'10px 12px',background:'var(--panel)',border:'1px solid var(--border)',borderRadius:9}}>
+            <div style={{fontSize:11,fontWeight:700,color:'var(--t3)',textTransform:'uppercase',letterSpacing:1,marginBottom:8}}>维度评分</div>
+            {(res.dimensions||[]).map(d=><div key={d.name} className="sbar">
+              <div className="sbar-l">{d.name}</div>
+              <div className="sbar-t"><div className="sbar-f" style={{width:`${d.score}%`,background:d.color}}/></div>
+              <div className="sbar-v">{d.score}</div>
+            </div>)}
+          </div>
+          {['error','warn','tip','ok'].map(lv=>{
+            const items=(res.issues||[]).filter(i=>i.level===lv);
+            if(!items.length)return null;
+            const {l,c}=lm[lv];const ic={error:'🚨',warn:'⚠️',tip:'💡',ok:'✅'}[lv];
+            return <div key={lv} className="isec">
+              <div className="isec-ttl">{ic} {l}（{items.length}）</div>
+              {items.map((issue,i)=><div key={i} className={`icard ${c}`}>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:3}}>
+                  <span className={`itag ${c}`}>{l}</span><span className="ifield">{issue.field}</span>
+                </div>
+                <div className="itext">{issue.text}</div>
+                {issue.fix&&<div className="ifix">💬 {issue.fix}</div>}
+              </div>)}
+            </div>;
+          })}
+          <button className="ai-start" style={{width:'100%',marginTop:4}} onClick={run}>🔄 重新分析</button>
+        </div>}
+      </div>
+    </div>
+  </div>;
+}
+
+/* MANAGER PAGE */
+function Manager({resumes,onOpen,onNew,onDel}){
+  return <div className="manager">
+    <div className="mgr-hd">
+      <div>
+        <div className="mgr-title">我的<em>简历</em></div>
+        <div style={{fontSize:12,color:'var(--t3)',marginTop:4}}>共 {resumes.length} 份，自动保存在本地</div>
+      </div>
+      <button className="btn ba" onClick={onNew}>＋ 新建简历</button>
+    </div>
+    {resumes.length===0?(
+      <div className="empty">
+        <div style={{fontSize:52,opacity:.4}}>📄</div>
+        <div style={{fontSize:18,fontWeight:700,color:'var(--t2)'}}>还没有简历</div>
+        <div style={{fontSize:13,color:'var(--t3)'}}>点击下方按钮开始创建你的第一份简历</div>
+        <button className="btn ba" onClick={onNew}>＋ 新建简历</button>
+      </div>
+    ):(
+      <div className="mgr-grid">
+        <div className="new-rc" onClick={onNew}>
+          <div style={{fontSize:36,opacity:.5}}>＋</div>
+          <div style={{fontSize:13,fontWeight:700,color:'var(--t2)'}}>新建简历</div>
+          <div style={{fontSize:11,color:'var(--t3)'}}>从空白开始</div>
+        </div>
+        {resumes.map(r=>(
+          <div key={r.id} className="rc" onClick={()=>onOpen(r.id)}>
+            <div className="rc-thumb">
+              <div style={{transformOrigin:'top center',transform:'scale(0.37)',width:'210mm',pointerEvents:'none'}}>
+                <Resume data={r} tplId={r.tplId||'executive'}/>
+              </div>
+            </div>
+            <div className="rc-info">
+              <div>
+                <div className="rc-name">{r.profile?.name||'未命名'}</div>
+                <div className="rc-meta">{r.profile?.title||'—'} · {r.createdAt}</div>
+                <div className="rc-tpl">{getT(r.tplId||'executive').name}</div>
+              </div>
+              <div className="rc-actions" onClick={e=>e.stopPropagation()}>
+                <button className="btn gh" style={{padding:'4px 10px',fontSize:11}} onClick={e=>{e.stopPropagation();onOpen(r.id)}}>编辑</button>
+                <button className="btn gh" style={{padding:'4px 10px',fontSize:11,color:'var(--danger)',borderColor:'rgba(248,113,113,.3)'}} onClick={e=>{e.stopPropagation();if(confirm('确定删除？此操作不可撤销'))onDel(r.id)}}>删除</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>;
+}
+
+/* EDITOR VIEW */
+function Editor({data,setData,tplId,setTplId,onBack,onSave}){
+  const [active,setActive]=useState('profile');
+  const [showGal,setShowGal]=useState(false);
+  const [showAdd,setShowAdd]=useState(false);
+  const [showAI,setShowAI]=useState(false);
+  const [zoom,setZoom]=useState(1.0);
+  const upd=(k,v)=>setData(p=>({...p,[k]:v}));
+
+  const handleAdd=opts=>{
+    if(opts.type==='preset'){
+      if(!data.sectionOrder.includes(opts.key)){upd('sectionOrder',[...data.sectionOrder,opts.key]);setActive(opts.key);}
+    } else {
+      const ns={id:uid(),name:opts.name,icon:opts.icon,entries:[]};
+      upd('customSections',[...(data.customSections||[]),ns]);setActive(ns.id);
+    }
+  };
+
+  const ed=()=>{
+    const d=data;const cs=(d.customSections||[]).find(s=>s.id===active);
+    if(active==='profile')return <ProfEd d={d.profile} set={v=>upd('profile',v)}/>;
+    if(active==='experience')return <ExpEd d={d.experiences} set={v=>upd('experiences',v)}/>;
+    if(active==='education')return <EduEd d={d.educations} set={v=>upd('educations',v)}/>;
+    if(active==='skills')return <SkillEd d={d.skills} set={v=>upd('skills',v)}/>;
+    if(active==='projects')return <ProjEd d={d.projects} set={v=>upd('projects',v)}/>;
+    if(active==='certifications')return <CertEd d={d.certifications} set={v=>upd('certifications',v)}/>;
+    if(active==='languages')return <LangEd d={d.languages} set={v=>upd('languages',v)}/>;
+    if(active==='awards')return <AwardEd d={d.awards} set={v=>upd('awards',v)}/>;
+    if(active==='volunteering')return <VolEd d={d.volunteering} set={v=>upd('volunteering',v)}/>;
+    if(active==='publications')return <PubEd d={d.publications} set={v=>upd('publications',v)}/>;
+    if(cs)return <CustEd sec={cs} onChange={u=>upd('customSections',(d.customSections||[]).map(s=>s.id===cs.id?u:s))} onDel={()=>{upd('customSections',(d.customSections||[]).filter(s=>s.id!==cs.id));setActive('profile')}}/>;
+    return null;
+  };
+
+  return <>
+    <header className="topbar">
+      <div className="logo">简</div>
+      <div className="brand-t"><em>简历星</em> Pro</div>
+      <div className="vd"/>
+      <button className="btn gh" style={{padding:'4px 10px',fontSize:11}} onClick={onBack}>← 我的简历</button>
+      <div className="vd"/>
+      <button className={`tpl-trig${showGal?' on':''}`} onClick={()=>setShowGal(v=>!v)}>
+        🎨 模板 <span className="tpl-nm">{getT(tplId).name}</span> {showGal?'▲':'▼'}
+      </button>
+      <div className="vd"/>
+      <button className="btn bai" onClick={()=>setShowAI(true)}>🤖 AI诊断</button>
+      <div className="spacer"/>
+      <div style={{display:'flex',gap:7}}>
+        <button className="btn gh" onClick={onSave}>💾 保存</button>
+        <button className="btn ba" onClick={()=>window.print()}>🖨 PDF</button>
+      </div>
+    </header>
+    <div className="workspace">
+      <aside className="sidebar">
+        <SecNav order={data.sectionOrder} setOrder={v=>upd('sectionOrder',v)} custom={data.customSections||[]} setCustom={v=>upd('customSections',v)} active={active} setActive={setActive} onAdd={()=>setShowAdd(true)}/>
+        <div className="ed-scroll">{ed()}</div>
+        <div className="ed-foot">💡 点「PDF」→ 浏览器打印 → 另存为PDF即可导出</div>
+      </aside>
+      <main className="preview-area">
+        <div className="pbar">
+          <div className="zrow">
+            <span style={{fontSize:10,fontWeight:800,color:'var(--t3)',textTransform:'uppercase',letterSpacing:1,marginRight:6}}>预览</span>
+            <button className="zbtn" onClick={()=>setZoom(z=>Math.max(.4,+(z-.05).toFixed(2)))}>−</button>
+            <span className="zval">{Math.round(zoom*100)}%</span>
+            <button className="zbtn" onClick={()=>setZoom(z=>Math.min(1.5,+(z+.05).toFixed(2)))}>+</button>
+            <button className="zbtn" onClick={()=>setZoom(1.0)}>100%</button>
+            <button className="zbtn" onClick={()=>setZoom(0.6)}>适合</button>
+          </div>
+          <span style={{fontSize:11,color:'var(--t3)'}}>A4 · {getT(tplId).name} · 默认100%</span>
+        </div>
+        <div className="pscroll">
+          <div className="pwrap" style={{transform:`scale(${zoom})`}}>
+            <Resume data={data} tplId={tplId}/>
+          </div>
+        </div>
+      </main>
+    </div>
+    {showGal&&<TplGallery current={tplId} onSelect={setTplId} onClose={()=>setShowGal(false)} sample={data}/>}
+    {showAdd&&<AddSecModal onClose={()=>setShowAdd(false)} onAdd={handleAdd} existing={data.sectionOrder}/>}
+    {showAI&&<AiPanel data={data} onClose={()=>setShowAI(false)}/>}
+  </>;
+}
+
+/* MAIN APP */
+function App(){
+  const [view,setView]=useState('manager');
+  const [resumes,setResumes]=useState(()=>{
+    try{const s=localStorage.getItem(LS);return s?JSON.parse(s):[DEMO];}catch{return [DEMO];}
+  });
+  const [editId,setEditId]=useState(null);
+  const [editData,setEditData]=useState(null);
+  const [editTpl,setEditTpl]=useState('executive');
+
+  useEffect(()=>{try{localStorage.setItem(LS,JSON.stringify(resumes));}catch{}},[resumes]);
+
+  const open=id=>{
+    const r=resumes.find(x=>x.id===id);if(!r)return;
+    setEditId(id);setEditData({...r});setEditTpl(r.tplId||'executive');setView('editor');
+  };
+  const newR=()=>{
+    const r=mkNew();setResumes(p=>[...p,r]);
+    setEditId(r.id);setEditData({...r});setEditTpl('executive');setView('editor');
+  };
+  const delR=id=>setResumes(p=>p.filter(r=>r.id!==id));
+  const save=()=>{
+    const u={...editData,tplId:editTpl,name:editData.profile?.name||'未命名'};
+    setResumes(p=>p.map(r=>r.id===editId?u:r));
+    alert('✅ 已保存到本地');
+  };
+  const back=()=>{
+    const u={...editData,tplId:editTpl,name:editData.profile?.name||'未命名'};
+    setResumes(p=>p.map(r=>r.id===editId?u:r));setView('manager');
+  };
+
+  if(view==='manager')return <div className="app">
+    <header className="topbar">
+      <div className="logo">简</div>
+      <div className="brand-t"><em>简历星</em> Pro</div>
+      <div className="vd"/>
+      <span style={{fontSize:12,color:'var(--t2)'}}>简历管理中心</span>
+      <div className="spacer"/>
+      <button className="btn ba" onClick={newR}>＋ 新建简历</button>
+    </header>
+    <Manager resumes={resumes} onOpen={open} onNew={newR} onDel={delR}/>
+  </div>;
+
+  return <div className="app">
+    <Editor data={editData} setData={setEditData} tplId={editTpl} setTplId={setEditTpl} onBack={back} onSave={save}/>
+  </div>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
